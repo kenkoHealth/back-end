@@ -10,8 +10,8 @@ module.exports = {
       host: "localhost",
       port: 5432,
       user: "postgres",
-      password: undefined, // insert password here,
-      database: "no name",
+      password: process.env.LOCAL_PASSWORD,
+      database: "Kenko-BE",
     },
     migrations: {
       directory: "./data/migrations",
@@ -31,8 +31,8 @@ module.exports = {
       host: "localhost",
       port: 5432,
       user: "postgres",
-      password: undefined, // insert password here,
-      database: "no name",
+      password: process.env.LOCAL_PASSWORD,
+      database: "Kenko-BE",
     },
     migrations: {
       directory: "./data/migrations",
