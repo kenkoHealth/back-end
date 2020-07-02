@@ -26,8 +26,8 @@ router.post("/register", (req, res) => {
 
 // Login endpoint
 router.post("/login", (req, res) => {
-  const { id, password } = req.body;
-  Users.findUserById(id)
+  const { email, password } = req.body;
+  Users.findBy(email)
     .first()
     .then((user) => {
       if (user && bcrypt.compareSync(password, user.password)) {
@@ -42,6 +42,10 @@ router.post("/login", (req, res) => {
       } else {
         res.status(401).json({ message: "Invalid credentials provided!" });
       }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err, message: "Login Failed!" });
     });
 });
 

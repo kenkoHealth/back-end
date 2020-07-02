@@ -4,6 +4,7 @@ const db = require("../../data/dbConfig");
 module.exports = {
   findUsers,
   findUserById,
+  findBy,
   addUser,
   updateUser,
   destroyUser,
@@ -16,6 +17,10 @@ function findUsers() {
 // Return a user based on ID of user
 function findUserById(id) {
   return db("users").where({ id: id });
+}
+// Utility function to allow user login via email
+function findBy(filter) {
+  return db("users").where({ email: filter });
 }
 // Add a new user into the database
 function addUser(newUser) {

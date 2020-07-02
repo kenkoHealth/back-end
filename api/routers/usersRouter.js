@@ -1,10 +1,10 @@
 const express = require("express");
 const Users = require("../models/userModels");
-const authmw = require("../auth/auth-middleware.js");
+const authmw = require("../auth/authMiddleware");
 const router = express.Router();
 
 // Get a list of all users endpoint
-router.get("/", (req, res) => {
+router.get("/", authmw, (req, res) => {
   Users.findUsers()
     .then((users) => {
       res.json(users);
@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
     });
 });
 // Retrieve a user by the user's ID endpoint
-router.get("/:id", (req, res) => {
+router.get("/:id", authmw, (req, res) => {
   const { id } = req.params;
 
   Users.findUserById(id)
@@ -31,33 +31,32 @@ router.get("/:id", (req, res) => {
 });
 
 // Update a user endpoint
-router.put("/:id", (req, res) => {
+router.put("/:id", authmw, (req, res) => {
   const { id } = req.params;
   const changes = req.body;
 
-  Users.findUserById(id)
+  Users.updateUser(id, changes)
     .then((user) => {
-      if (user) {
-        Users.update(changes, id).then((updatedUser) => {
-          res.json(updatedUser);
-        });
-      } else {
-        res.status(404).json({ message: "Could not find user with that ID" });
-      }
+      res.status(200).json(user);
     })
     .catch((err) => {
-      res.status(500).json({ error: err, message: "Failed to update User" });
+      res.status(500).json({
+        error: err,
+        message: `Failure to update user with the id of ${id}`,
+      });
     });
 });
 
 // Delete a user endpoint
-router.delete("/:id", (req, res) => {
+router.delete("/:id", authmw, (req, res) => {
   const { id } = req.params;
 
   Users.destroyUser(id)
     .then((deleted) => {
       if (deleted) {
-        res.json({ removed: deleted });
+        res.json({
+          Message: `You have successfully removed the user with the id ${id}`,
+        });
       } else {
         res.status(404).json({
           message: "Could not find and delete User with the given ID",
