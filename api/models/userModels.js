@@ -2,7 +2,7 @@
 const db = require("../../data/dbConfig");
 
 module.exports = {
-  findUser,
+  findUsers,
   findUserById,
   addUser,
   updateUser,
@@ -10,7 +10,7 @@ module.exports = {
 };
 
 // Return a list of all users in the database
-function findUser() {
+function findUsers() {
   return db("users");
 }
 // Return a user based on ID of user
@@ -25,7 +25,7 @@ function addUser(newUser) {
       return findUserById(id[0]);
     });
 }
-//update user by ID
+// Update user in database by ID
 function updateUser(id, updatedUser) {
   return db("users")
     .where({ id })
@@ -34,6 +34,7 @@ function updateUser(id, updatedUser) {
       return findUserById(id);
     });
 }
+// Remove a user from the database by ID
 function destroyUser(id) {
   return db("users").where({ id }).del();
 }
