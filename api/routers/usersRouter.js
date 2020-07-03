@@ -30,7 +30,9 @@ router.get("/:id", (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: err, message: "Failed to get user." });
+      res.status(500).json({
+        error: "Unable to retrieve that user, please pass in a valid ID.",
+      });
     });
 });
 
@@ -40,14 +42,36 @@ router.put("/:id", (req, res) => {
   const changes = req.body;
   console.log(changes);
 
-  Users.updateUser(id, changes)
+  Users.findUserById(id)
     .then((user) => {
-      res.status(200).json(user);
+      let first_name = user[0]["first_name"];
+      let last_name = user[0]["last_name"];
+      Users.updateUser(id, changes)
+        .then((user) => {
+          if (
+            changes.first_name === user.first_name &&
+            changes.last_name === user.last_name &&
+            changes.email === user.email &&
+            changes.password === user.password
+          ) {
+            res.status(400).json({
+              error: `Update must include at least one change to the user ${first_name} ${last_name}.`,
+            });
+          } else {
+            res.status(200).json({
+              Message: `User profile ${first_name} ${last_name} successfully updated.`,
+            });
+          }
+        })
+        .catch((err) => {
+          res.status(500).json({
+            message: `Failed to update user with the id of ${id}.`,
+          });
+        });
     })
     .catch((err) => {
       res.status(500).json({
-        error: err,
-        message: `Failure to update user with the id of ${id}`,
+        error: "Unable to retrieve that user, please pass in a valid user ID.",
       });
     });
 });
