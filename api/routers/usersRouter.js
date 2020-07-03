@@ -4,51 +4,80 @@ const authmw = require("../auth/authMiddleware");
 const router = express.Router();
 
 // Get a list of all users endpoint
-router.get("/", authmw, (req, res) => {
+router.get("/", (req, res) => {
   Users.findUsers()
     .then((users) => {
       res.json(users);
     })
     .catch((err) => {
-      res.status(500).json({ error: err, message: "Failed to get users" });
+      res
+        .status(500)
+        .json({ error: err, message: "Failed to retrieve users." });
     });
 });
 // Retrieve a user by the user's ID endpoint
-router.get("/:id", authmw, (req, res) => {
+router.get("/:id", (req, res) => {
   const { id } = req.params;
 
   Users.findUserById(id)
     .then((user) => {
-      if (user) {
+      if (user.length > 0) {
         res.json(user);
       } else {
-        res.status(404).json({ message: "Could not find a user with that ID" });
+        res
+          .status(404)
+          .json({ message: `Could not find a user with the ID of ${id}.` });
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: err, message: "Failed to get users" });
+      res.status(500).json({
+        error: "Unable to retrieve that user, please pass in a valid ID.",
+      });
     });
 });
 
 // Update a user endpoint
-router.put("/:id", authmw, (req, res) => {
+router.put("/:id", (req, res) => {
   const { id } = req.params;
   const changes = req.body;
+  console.log(changes);
 
-  Users.updateUser(id, changes)
+  Users.findUserById(id)
     .then((user) => {
-      res.status(200).json(user);
+      let first_name = user[0]["first_name"];
+      let last_name = user[0]["last_name"];
+      Users.updateUser(id, changes)
+        .then((user) => {
+          if (
+            changes.first_name === user.first_name &&
+            changes.last_name === user.last_name &&
+            changes.email === user.email &&
+            changes.password === user.password
+          ) {
+            res.status(400).json({
+              error: `Update must include at least one change to the user ${first_name} ${last_name}.`,
+            });
+          } else {
+            res.status(200).json({
+              Message: `User profile ${first_name} ${last_name} successfully updated.`,
+            });
+          }
+        })
+        .catch((err) => {
+          res.status(500).json({
+            message: `Failed to update user with the id of ${id}.`,
+          });
+        });
     })
     .catch((err) => {
       res.status(500).json({
-        error: err,
-        message: `Failure to update user with the id of ${id}`,
+        error: "Unable to retrieve that user, please pass in a valid user ID.",
       });
     });
 });
 
 // Delete a user endpoint
-router.delete("/:id", authmw, (req, res) => {
+router.delete("/:id", (req, res) => {
   const { id } = req.params;
 
   Users.destroyUser(id)
