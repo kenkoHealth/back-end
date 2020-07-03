@@ -4,36 +4,41 @@ const authmw = require("../auth/authMiddleware");
 const router = express.Router();
 
 // Get a list of all users endpoint
-router.get("/", authmw, (req, res) => {
+router.get("/", (req, res) => {
   Users.findUsers()
     .then((users) => {
       res.json(users);
     })
     .catch((err) => {
-      res.status(500).json({ error: err, message: "Failed to get users" });
+      res
+        .status(500)
+        .json({ error: err, message: "Failed to retrieve users." });
     });
 });
 // Retrieve a user by the user's ID endpoint
-router.get("/:id", authmw, (req, res) => {
+router.get("/:id", (req, res) => {
   const { id } = req.params;
 
   Users.findUserById(id)
     .then((user) => {
-      if (user) {
+      if (user.length > 0) {
         res.json(user);
       } else {
-        res.status(404).json({ message: "Could not find a user with that ID" });
+        res
+          .status(404)
+          .json({ message: `Could not find a user with the ID of ${id}.` });
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: err, message: "Failed to get users" });
+      res.status(500).json({ error: err, message: "Failed to get user." });
     });
 });
 
 // Update a user endpoint
-router.put("/:id", authmw, (req, res) => {
+router.put("/:id", (req, res) => {
   const { id } = req.params;
   const changes = req.body;
+  console.log(changes);
 
   Users.updateUser(id, changes)
     .then((user) => {
@@ -48,7 +53,7 @@ router.put("/:id", authmw, (req, res) => {
 });
 
 // Delete a user endpoint
-router.delete("/:id", authmw, (req, res) => {
+router.delete("/:id", (req, res) => {
   const { id } = req.params;
 
   Users.destroyUser(id)
