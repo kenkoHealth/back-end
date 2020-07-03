@@ -40,7 +40,6 @@ router.get("/:id", (req, res) => {
 router.put("/:id", (req, res) => {
   const { id } = req.params;
   const changes = req.body;
-  console.log(changes);
 
   Users.findUserById(id)
     .then((user) => {
@@ -48,11 +47,12 @@ router.put("/:id", (req, res) => {
       let last_name = user[0]["last_name"];
       Users.updateUser(id, changes)
         .then((user) => {
+          const userToChange = user[0];
           if (
-            changes.first_name === user.first_name &&
-            changes.last_name === user.last_name &&
-            changes.email === user.email &&
-            changes.password === user.password
+            changes.first_name === userToChange.first_name &&
+            changes.last_name === userToChange.last_name &&
+            changes.email === userToChange.email &&
+            changes.password === userToChange.password
           ) {
             res.status(400).json({
               error: `Update must include at least one change to the user ${first_name} ${last_name}.`,
