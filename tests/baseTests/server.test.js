@@ -13,5 +13,11 @@ describe("Server", () => {
         expect(res.status).toBe(200);
       });
   });
-  it("Returns the correct message upon being hit", () => {});
+  it("Returns the correct message upon being hit", () => {
+    return request(server)
+      .get("/")
+      .then((res) => {
+        expect(res.body).toEqual({ Message: "Server is up and running!" });
+      });
+  });
 });
