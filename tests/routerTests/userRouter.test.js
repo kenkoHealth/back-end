@@ -27,6 +27,18 @@ describe("User should be able to successfully register", () => {
         first_name: "Aaron",
         last_name: "Gillies",
       });
+    let tokenType = typeof response.body.token;
     expect(response.body.token).toBeDefined();
+    expect(response.body.token).toBeType(tokenType, "string");
+  });
+  it("Should fail if incorrect request body is sent", async () => {
+    let response = await request(server).post("/api/auth/register").send({
+      password: "KenkoTest",
+      first_name: "Aaron",
+      last_name: "Gillies",
+    });
+    expect(response.status).toBe(500);
   });
 });
+
+// Test successful user login
