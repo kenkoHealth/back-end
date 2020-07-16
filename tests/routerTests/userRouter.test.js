@@ -42,3 +42,25 @@ describe("User should be able to successfully register", () => {
 });
 
 // Test successful user login
+
+describe("User should be able to successfully login after registering", () => {
+  it("Should successfully register and login returning status 200", async () => {
+    // Need to register a user here before we login.
+    const randomUserNum = Math.random() * 5000;
+    let testUser = {
+      email: `KenkoTest${randomUserNum}@email.com`,
+      password: "KenkoTest",
+      first_name: "Aaron",
+      last_name: "Gillies",
+    };
+    let response = await request(server)
+      .post("/api/auth/register")
+      .send(testUser);
+    // Here, we login with credentials we registered above.
+    let login = await request(server).post("/api/auth/login").send({
+      email: testUser.email,
+      password: testUser.password,
+    });
+    expect(login.status).toBe(200);
+  });
+});

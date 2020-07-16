@@ -2,7 +2,7 @@
 expect.extend({
   toBeType(receivedInput, arg) {
     const initialType = typeof receivedInput;
-    if (initialType == arg) {
+    if (initialType === arg) {
       return {
         message: () => `expected ${receivedInput} to be type ${initialType}.`,
         pass: true,
