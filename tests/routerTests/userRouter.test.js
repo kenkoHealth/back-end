@@ -4,7 +4,7 @@ const server = require("../../server");
 
 // Utility function to generate test users
 function generateUser(pass, first, last) {
-  const randomUserNum = Math.random * 5000;
+  const randomUserNum = Math.random() * 5000;
   let testUser = {
     email: `kenkoTest${randomUserNum}@email.com`,
     password: pass,
@@ -23,5 +23,10 @@ describe("Successfully returns an array of all users", () => {
       email: user.email,
       password: user.password,
     });
+    const currentToken = login.body.token;
+    let getUsers = await request(server)
+      .get("/api/users/")
+      .set("Authorization", currentToken);
+    expect(getUsers.status).toBe(200);
   });
 });
