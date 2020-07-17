@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/", authmw, (req, res) => {
   Users.findUsers()
     .then((users) => {
-      res.json(users);
+      res.status(200).json(users);
     })
     .catch((err) => {
       res
