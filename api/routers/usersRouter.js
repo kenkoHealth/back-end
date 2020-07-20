@@ -22,6 +22,7 @@ router.get("/:id", authmw, (req, res) => {
   Users.findUserById(id)
     .then((user) => {
       if (user.length > 0) {
+        res.status(200);
         res.json(user);
       } else {
         res
