@@ -27,6 +27,8 @@ describe("Successfully returns an array of all users", () => {
     let getUsers = await request(server)
       .get("/api/users/")
       .set("Authorization", currentToken);
+    const resType = typeof getUsers.body;
     expect(getUsers.status).toBe(200);
+    expect(getUsers.body).toBeType(resType, "object");
   });
 });
