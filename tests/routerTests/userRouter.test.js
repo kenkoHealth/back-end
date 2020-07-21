@@ -1,6 +1,7 @@
 // User Routes tests
 const request = require("supertest");
 const server = require("../../server");
+const { first } = require("../../data/dbConfig");
 
 // Utility function to generate test users
 function generateUser(pass, first, last) {
@@ -50,5 +51,31 @@ describe("Test get an individual user from database", () => {
       .set("Authorization", currentToken);
     expect(getSingleUser.status).toBe(200);
     expect(getSingleUser.body.length).toEqual(1);
+  });
+});
+
+// Test Update a user
+
+describe("Test updating a specific user in the database", () => {
+  it("Successfully updates the user and returns status code 200", async () => {
+    let user = generateUser("kenkoTest3", "Eric", "Johnson");
+    let response = await request(server).post("/api/auth/register").send(user);
+
+    let login = await request(server).post("/api/auth/login").send({
+      email: user.email,
+      password: user.password,
+    });
+    const currentToken = login.body.token;
+    const updatedData = {
+      email: "newEmail@email.com",
+      password: "newPass",
+      first_name: "Joel",
+      last_name: "erickson",
+    };
+    let updateSingleUser = await request(server)
+      .put(`/api/users/${login.body.current_user.id}`)
+      .set("Authorization", currentToken)
+      .send(updatedData);
+    expect(updateSingleUser.status).toBe(200);
   });
 });
