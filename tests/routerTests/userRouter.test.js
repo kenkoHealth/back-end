@@ -1,7 +1,6 @@
 // User Routes tests
 const request = require("supertest");
 const server = require("../../server");
-const { first } = require("../../data/dbConfig");
 
 // Utility function to generate test users
 function generateUser(pass, first, last) {
@@ -55,7 +54,6 @@ describe("Test get an individual user from database", () => {
 });
 
 // Test Update a user
-
 describe("Test updating a specific user in the database", () => {
   it("Successfully updates the user and returns status code 200", async () => {
     let user = generateUser("kenkoTest3", "Eric", "Johnson");
@@ -66,16 +64,37 @@ describe("Test updating a specific user in the database", () => {
       password: user.password,
     });
     const currentToken = login.body.token;
-    const updatedData = {
-      email: "newEmail@email.com",
-      password: "newPass",
-      first_name: "Joel",
-      last_name: "erickson",
-    };
     let updateSingleUser = await request(server)
       .put(`/api/users/${login.body.current_user.id}`)
       .set("Authorization", currentToken)
-      .send(updatedData);
+      .send({ first_name: `Sam` });
     expect(updateSingleUser.status).toBe(200);
+    expect(updateSingleUser.body).toEqual({
+      Message: `User profile ${user.first_name} ${user.last_name} successfully updated.`,
+    });
+  });
+});
+
+// Test if we can successfully delete a user
+describe("Test deleting a user from the database by ID", () => {
+  it("Successfully deletes a user and returns status code 200", async () => {
+    let user = generateUser("kenkoTest5", "Jennifer", "Smith");
+    let response = await request(server).post("/api/auth/register").send(user);
+
+    let login = await request(server).post("/api/auth/login").send({
+      email: user.email,
+      password: user.password,
+    });
+
+    const currentToken = login.body.token;
+    let deleteSingleUser = await request(server)
+      .delete(`/api/users/${login.body.current_user.id}`)
+      .set("Authorization", currentToken);
+    const successfulDelete = typeof deleteSingleUser.body;
+    expect(deleteSingleUser.status).toBe(200);
+    expect(deleteSingleUser.body).toEqual({
+      Message: `You have successfully removed the user with the id ${login.body.current_user.id}`,
+    });
+    expect(deleteSingleUser.body).toBeType(successfulDelete, "object");
   });
 });

@@ -84,6 +84,7 @@ router.delete("/:id", authmw, (req, res) => {
   Users.destroyUser(id)
     .then((deleted) => {
       if (deleted) {
+        res.status(200);
         res.json({
           Message: `You have successfully removed the user with the id ${id}`,
         });
