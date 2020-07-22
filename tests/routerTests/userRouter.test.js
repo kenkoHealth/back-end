@@ -70,5 +70,8 @@ describe("Test updating a specific user in the database", () => {
       .set("Authorization", currentToken)
       .send({ first_name: `Sam` });
     expect(updateSingleUser.status).toBe(200);
+    expect(updateSingleUser.body).toEqual({
+      Message: `User profile ${user.first_name} ${user.last_name} successfully updated.`,
+    });
   });
 });
