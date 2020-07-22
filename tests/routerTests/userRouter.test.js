@@ -1,7 +1,6 @@
 // User Routes tests
 const request = require("supertest");
 const server = require("../../server");
-const { first } = require("../../data/dbConfig");
 
 // Utility function to generate test users
 function generateUser(pass, first, last) {
@@ -66,16 +65,10 @@ describe("Test updating a specific user in the database", () => {
       password: user.password,
     });
     const currentToken = login.body.token;
-    const updatedData = {
-      email: "newEmail@email.com",
-      password: "newPass",
-      first_name: "Joel",
-      last_name: "erickson",
-    };
     let updateSingleUser = await request(server)
       .put(`/api/users/${login.body.current_user.id}`)
       .set("Authorization", currentToken)
-      .send(updatedData);
+      .send({ first_name: `Sam` });
     expect(updateSingleUser.status).toBe(200);
   });
 });
