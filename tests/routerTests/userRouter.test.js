@@ -13,6 +13,18 @@ function generateUser(pass, first, last) {
   };
   return testUser;
 }
+
+// Could write another utility function to register/login a user to help clean up test code a bit
+async function authenticateForTest() {
+  const user = generateUser("KenkoTest5", "Erica", "Sims");
+  const response = await request(server).post("/api/auth/register").send(user);
+
+  const login = await request(server).post("/api/auth/login").send({
+    email: user.email,
+    password: user.password,
+  });
+  return login;
+}
 // Test get all users endpoint. (Routes are protected, will need to register and login in order to access)
 describe("Successfully returns an array of all users", () => {
   it("Successfully returns status code 200 on request", async () => {
