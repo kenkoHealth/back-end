@@ -32,7 +32,8 @@ router.get("/:id", authmw, (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({
-        error: "Unable to retrieve that user, please pass in a valid ID.",
+        message: "Unable to retrieve that user.",
+        error: err,
       });
     });
 });

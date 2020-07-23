@@ -17,7 +17,9 @@ router.post("/register", (req, res) => {
       // Save token after generating
       const token = generateToken(user);
       // Return successful request and pass token and user info back to client.
-      res.status(201).json({ user: savedUser, token: token });
+      res
+        .status(201)
+        .json({ message: `Successfully registered!`, token: token });
     })
     .catch((err) => {
       res.status(500).json({ error: err, message: "Unable to add User" });
@@ -37,7 +39,7 @@ router.post("/login", (req, res) => {
           Message: `Welcome ${user.first_name} ${user.last_name}!`,
           Status: "Logged in",
           token: token,
-          current_user: user,
+          current_user: { ...user, password: null },
         });
       } else {
         res.status(401).json({ message: "Invalid credentials provided!" });

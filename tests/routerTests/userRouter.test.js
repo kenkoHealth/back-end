@@ -18,6 +18,7 @@ function generateUser(pass, first, last) {
 async function authenticateForTest() {
   const user = generateUser("KenkoTest5", "Erica", "Sims");
   const response = await request(server).post("/api/auth/register").send(user);
+  console.log(response);
 
   const login = await request(server).post("/api/auth/login").send({
     email: user.email,
@@ -85,3 +86,5 @@ describe("Test deleting a user from the database by ID", () => {
     expect(deleteSingleUser.body).toBeType(successfulDelete, "object");
   });
 });
+
+//
