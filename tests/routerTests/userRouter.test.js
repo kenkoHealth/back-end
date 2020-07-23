@@ -86,5 +86,3 @@ describe("Test deleting a user from the database by ID", () => {
     expect(deleteSingleUser.body).toBeType(successfulDelete, "object");
   });
 });
-
-//
