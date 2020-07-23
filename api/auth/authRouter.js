@@ -14,12 +14,8 @@ router.post("/register", (req, res) => {
   user.password = hash;
   Users.addUser(user)
     .then((savedUser) => {
-      // Save token after generating
-      const token = generateToken(user);
-      // Return successful request and pass token and user info back to client.
-      res
-        .status(201)
-        .json({ message: `Successfully registered!`, token: token });
+      // Return successful request and pass user info back to client.
+      res.status(201).json({ message: `Successfully registered!` });
     })
     .catch((err) => {
       res.status(500).json({ error: err, message: "Unable to add User" });
