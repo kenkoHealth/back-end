@@ -28,14 +28,8 @@ async function authenticateForTest() {
 // Test get all users endpoint. (Routes are protected, will need to register and login in order to access)
 describe("Successfully returns an array of all users", () => {
   it("Successfully returns status code 200 on request", async () => {
-    let user = generateUser("kenkoTest1", "Aaron", "Gillies");
-    let response = await request(server).post("/api/auth/register").send(user);
-
-    let login = await request(server).post("/api/auth/login").send({
-      email: user.email,
-      password: user.password,
-    });
-    const currentToken = login.body.token;
+    let authenticated = await authenticateForTest();
+    const currentToken = authenticated.body.token;
     let getUsers = await request(server)
       .get("/api/users/")
       .set("Authorization", currentToken);
@@ -49,14 +43,8 @@ describe("Successfully returns an array of all users", () => {
 // Test getting a specific user by ID
 describe("Test get an individual user from database", () => {
   it("Successfully returns an array of length 1 with a status code of 200", async () => {
-    let user = generateUser("kenkoTest2", "Andrew", "Smith");
-    let response = await request(server).post("/api/auth/register").send(user);
-
-    let login = await request(server).post("/api/auth/login").send({
-      email: user.email,
-      password: user.password,
-    });
-    const currentToken = login.body.token;
+    let authenticated = await authenticateForTest();
+    const currentToken = authenticated.body.token;
     let getSingleUser = await request(server)
       .get("/api/users/1")
       .set("Authorization", currentToken);
@@ -68,21 +56,15 @@ describe("Test get an individual user from database", () => {
 // Test Update a user
 describe("Test updating a specific user in the database", () => {
   it("Successfully updates the user and returns status code 200", async () => {
-    let user = generateUser("kenkoTest3", "Eric", "Johnson");
-    let response = await request(server).post("/api/auth/register").send(user);
-
-    let login = await request(server).post("/api/auth/login").send({
-      email: user.email,
-      password: user.password,
-    });
-    const currentToken = login.body.token;
+    let authenticated = await authenticateForTest();
+    const currentToken = authenticated.body.token;
     let updateSingleUser = await request(server)
-      .put(`/api/users/${login.body.current_user.id}`)
+      .put(`/api/users/${authenticated.body.current_user.id}`)
       .set("Authorization", currentToken)
       .send({ first_name: `Sam` });
     expect(updateSingleUser.status).toBe(200);
     expect(updateSingleUser.body).toEqual({
-      Message: `User profile ${user.first_name} ${user.last_name} successfully updated.`,
+      Message: `User profile ${authenticated.body.current_user.first_name} ${authenticated.body.current_user.last_name} successfully updated.`,
     });
   });
 });
@@ -90,22 +72,15 @@ describe("Test updating a specific user in the database", () => {
 // Test if we can successfully delete a user
 describe("Test deleting a user from the database by ID", () => {
   it("Successfully deletes a user and returns status code 200", async () => {
-    let user = generateUser("kenkoTest5", "Jennifer", "Smith");
-    let response = await request(server).post("/api/auth/register").send(user);
-
-    let login = await request(server).post("/api/auth/login").send({
-      email: user.email,
-      password: user.password,
-    });
-
-    const currentToken = login.body.token;
+    let authenticated = await authenticateForTest();
+    const currentToken = authenticated.body.token;
     let deleteSingleUser = await request(server)
-      .delete(`/api/users/${login.body.current_user.id}`)
+      .delete(`/api/users/${authenticated.body.current_user.id}`)
       .set("Authorization", currentToken);
     const successfulDelete = typeof deleteSingleUser.body;
     expect(deleteSingleUser.status).toBe(200);
     expect(deleteSingleUser.body).toEqual({
-      Message: `You have successfully removed the user with the id ${login.body.current_user.id}`,
+      Message: `You have successfully removed the user with the id ${authenticated.body.current_user.id}`,
     });
     expect(deleteSingleUser.body).toBeType(successfulDelete, "object");
   });
