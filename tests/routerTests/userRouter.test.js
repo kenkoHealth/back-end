@@ -18,7 +18,6 @@ function generateUser(pass, first, last) {
 async function authenticateForTest() {
   const user = generateUser("KenkoTest5", "Erica", "Sims");
   const response = await request(server).post("/api/auth/register").send(user);
-  console.log(response);
 
   const login = await request(server).post("/api/auth/login").send({
     email: user.email,
@@ -47,7 +46,7 @@ describe("Test get an individual user from database", () => {
     let authenticated = await authenticateForTest();
     const currentToken = authenticated.body.token;
     let getSingleUser = await request(server)
-      .get("/api/users/1")
+      .get(`/api/users/${authenticated.body.current_user.id}`)
       .set("Authorization", currentToken);
     expect(getSingleUser.status).toBe(200);
     expect(getSingleUser.body.length).toEqual(1);
@@ -84,5 +83,13 @@ describe("Test deleting a user from the database by ID", () => {
       Message: `You have successfully removed the user with the id ${authenticated.body.current_user.id}`,
     });
     expect(deleteSingleUser.body).toBeType(successfulDelete, "object");
+  });
+  it("Successfully returns a failure for incorrect user ID passed in", async () => {
+    let authenticated = await authenticateForTest();
+    const currentToken = authenticated.body.token;
+    let deleteSingleUser = await request(server)
+      .delete(`/api/users/${Math.random() * 5000}`)
+      .set("Authorization", currentToken);
+    expect(deleteSingleUser.status).toBe(500);
   });
 });
