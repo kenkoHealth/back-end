@@ -24,7 +24,6 @@ module.exports = {
       max: 10,
     },
   },
-
   // Test Database environment
   test: {
     client: "postgresql",
