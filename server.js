@@ -4,11 +4,13 @@ const helmet = require("helmet");
 const cors = require("cors");
 const server = express();
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 
 // Bring in routers
 const UsersRouter = require("./api/routers/usersRouter.js");
 const AuthRouter = require("./api/auth/authRouter.js");
 // Global middleware here...
+server.use(cookieParser());
 server.use(express.json());
 server.use(helmet());
 // Logging Middleware

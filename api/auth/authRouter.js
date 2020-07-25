@@ -31,6 +31,7 @@ router.post("/login", (req, res) => {
       if (user && bcrypt.compareSync(password, user.password)) {
         // Generate token on login as well as register
         const token = generateToken(user);
+        res.cookie("token", token, { httpOnly: true });
         res.status(200).json({
           Message: `Welcome ${user.first_name} ${user.last_name}!`,
           Status: "Logged in",

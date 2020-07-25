@@ -24,6 +24,27 @@ module.exports = {
       max: 10,
     },
   },
+  // Test Database environment
+  test: {
+    client: "postgresql",
+    connection: {
+      host: "localhost",
+      port: 5432,
+      user: "postgres",
+      password: process.env.LOCAL_PASSWORD,
+      database: "Kenko-BE-Test",
+    },
+    migrations: {
+      directory: "./data/migrations",
+    },
+    seeds: {
+      directory: "./data/seeds",
+    },
+    pool: {
+      min: 2,
+      max: 10,
+    },
+  },
   // Staging Database environment
   staging: {
     client: "postgresql",
