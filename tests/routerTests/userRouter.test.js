@@ -32,7 +32,7 @@ describe("Successfully returns an array of all users", () => {
     const currentToken = authenticated.body.token;
     let getUsers = await request(server)
       .get("/api/users/")
-      .set("Authorization", currentToken);
+      .set("Cookie", currentToken);
     const resType = typeof getUsers.body;
     expect(getUsers.status).toBe(200);
     expect(getUsers.body).toBeType(resType, "object");
@@ -47,7 +47,7 @@ describe("Test get an individual user from database", () => {
     const currentToken = authenticated.body.token;
     let getSingleUser = await request(server)
       .get(`/api/users/${authenticated.body.current_user.id}`)
-      .set("Authorization", currentToken);
+      .set("Cookie", currentToken);
     expect(getSingleUser.status).toBe(200);
     expect(getSingleUser.body.length).toEqual(1);
   });
@@ -60,7 +60,7 @@ describe("Test updating a specific user in the database", () => {
     const currentToken = authenticated.body.token;
     let updateSingleUser = await request(server)
       .put(`/api/users/${authenticated.body.current_user.id}`)
-      .set("Authorization", currentToken)
+      .set("Cookie", currentToken)
       .send({ first_name: `Sam` });
     expect(updateSingleUser.status).toBe(200);
     expect(updateSingleUser.body).toEqual({
@@ -76,7 +76,7 @@ describe("Test deleting a user from the database by ID", () => {
     const currentToken = authenticated.body.token;
     let deleteSingleUser = await request(server)
       .delete(`/api/users/${authenticated.body.current_user.id}`)
-      .set("Authorization", currentToken);
+      .set("Cookie", currentToken);
     const successfulDelete = typeof deleteSingleUser.body;
     expect(deleteSingleUser.status).toBe(200);
     expect(deleteSingleUser.body).toEqual({
@@ -89,7 +89,7 @@ describe("Test deleting a user from the database by ID", () => {
     const currentToken = authenticated.body.token;
     let deleteSingleUser = await request(server)
       .delete(`/api/users/${Math.random() * 5000}`)
-      .set("Authorization", currentToken);
+      .set("Cookie", currentToken);
     expect(deleteSingleUser.status).toBe(500);
   });
 });
