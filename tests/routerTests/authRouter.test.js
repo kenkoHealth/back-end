@@ -1,6 +1,6 @@
 const request = require("supertest");
 const server = require("../../server");
-
+//
 // Test Register endpoint
 
 // Test successful user registration.
@@ -28,8 +28,7 @@ describe("User should be able to successfully register", () => {
         last_name: "Gillies",
       });
     let tokenType = typeof response.body.token;
-    expect(response.body.token).toBeDefined();
-    expect(response.body.token).toBeType(tokenType, "string");
+    expect(response.body.token).toBeUndefined();
   });
   it("Should fail if incorrect request body is sent", async () => {
     let response = await request(server).post("/api/auth/register").send({
@@ -61,7 +60,7 @@ describe("User should be able to successfully login after registering", () => {
       email: testUser.email,
       password: testUser.password,
     });
-    let tokenType = typeof response.body.token;
+    let tokenType = typeof login.body.token;
     expect(login.status).toBe(200);
     expect(login.body.token).toBeDefined();
     expect(login.body.token).toBeType(tokenType, "string");
