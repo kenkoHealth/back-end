@@ -4,6 +4,9 @@ module.exports = {
   getGoals,
   getGoalByUserId,
   getGoalById,
+  addGoal,
+  updateGoal,
+  deleteGoal,
 };
 // Retrieve all Goals from all users
 async function getGoals() {
@@ -28,4 +31,19 @@ async function getGoalByUserId(user_id) {
 async function getGoalById(goal_id) {
   const goal = await db("goals").where({ id: goal_id }).first();
   return goal;
+}
+// Add a goal
+async function addGoal(goal) {
+  const addedGoal = await db("goals").insert(goal, "id");
+  return getGoalById(addedGoal.id);
+}
+// Update a goal
+async function updateGoal(updatedGoal, id) {
+  const newGoal = await db("goals").where({ id }).update(updatedGoal);
+  return getGoalById(newGoal.id);
+}
+// Delete a goal
+async function deleteGoal(goal_id) {
+  const deletedGoal = await db("goals").where({ id: goal_id }).del();
+  return getGoalById(deletedGoal.id);
 }
