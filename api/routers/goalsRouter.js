@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
   }
 });
 // Retrieve goals by a specific user ID
-router.get("/user/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const results = await goals.getGoalByUserId(id);
@@ -31,5 +31,19 @@ router.get("/user/:id", async (req, res) => {
   }
 });
 // Get a specific goal from any user by it's ID
-router.get("/:id");
+router.get("/goal/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await goals.getGoalById(id);
+    if (!id) {
+      res
+        .status(404)
+        .json({ message: `Goal with ID of ${id} does not exist.` });
+    } else res.status(200).json(result);
+  } catch (e) {
+    res
+      .status(500)
+      .json({ error: e, message: `Failed to retrieve Goal with ID of ${id}.` });
+  }
+});
 module.exports = router;
