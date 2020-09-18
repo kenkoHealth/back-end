@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
   }
 });
 // Retrieve goals by a specific user ID
-router.get("/:id", async (req, res) => {
+router.get("/user/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const results = await goals.getGoalByUserId(id);
@@ -30,4 +30,6 @@ router.get("/:id", async (req, res) => {
       .json({ error: e, message: "Failed to retrieve Goals for that user." });
   }
 });
+// Get a specific goal from any user by it's ID
+router.get("/:id");
 module.exports = router;
