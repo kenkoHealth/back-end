@@ -15,7 +15,6 @@ router.get("/", async (req, res) => {
 // Retrieve goals by a specific user ID
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   try {
     const results = await goals.getGoalByUserId(id);
     if (!id) {
