@@ -12,5 +12,23 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: e, message: "Failed to retrieve Goals." });
   }
 });
-
+// Retrieve goals by a specific user ID
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const results = await goals.getGoalByUserId(id);
+    if (!id) {
+      res
+        .status(404)
+        .json({ message: `User with ID of ${id} does not exist.` });
+    } else {
+      res.status(200).json(results);
+    }
+  } catch (e) {
+    res
+      .status(500)
+      .json({ error: e, message: "Failed to retrieve Goals for that user." });
+  }
+});
 module.exports = router;
