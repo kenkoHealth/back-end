@@ -9,7 +9,9 @@ router.get("/", async (req, res) => {
     const results = await goals.getGoals();
     res.status(200).json(results);
   } catch (e) {
-    res.status(500).json({ error: e, message: "Failed to retrieve Goals." });
+    res
+      .status(500)
+      .json({ error: e.response, message: "Failed to retrieve Goals." });
   }
 });
 // Retrieve goals by a specific user ID
@@ -25,9 +27,10 @@ router.get("/:id", async (req, res) => {
       res.status(200).json(results);
     }
   } catch (e) {
-    res
-      .status(500)
-      .json({ error: e, message: "Failed to retrieve Goals for that user." });
+    res.status(500).json({
+      error: e.response,
+      message: "Failed to retrieve Goals for that user.",
+    });
   }
 });
 // Get a specific goal from any user by it's ID
@@ -41,9 +44,10 @@ router.get("/goal/:id", async (req, res) => {
         .json({ message: `Goal with ID of ${id} does not exist.` });
     } else res.status(200).json(result);
   } catch (e) {
-    res
-      .status(500)
-      .json({ error: e, message: `Failed to retrieve Goal with ID of ${id}.` });
+    res.status(500).json({
+      error: e.response,
+      message: `Failed to retrieve Goal with ID of ${id}.`,
+    });
   }
 });
 // Add a goal for a specific user
@@ -57,11 +61,10 @@ router.post("/", async (req, res) => {
         res.status(400).json({
           message: `Please make sure all required fields are populated before sending request.`,
         });
-      }
+      } else res.status(200).json(result);
     }
-    res.status(200).json(result);
   } catch (e) {
-    res.status(500).json({ error: e, message: `Unable to add Goal.` });
+    res.status(500).json({ error: e.response, message: `Unable to add Goal.` });
   }
 });
 module.exports = router;

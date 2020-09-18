@@ -35,15 +35,15 @@ async function getGoalById(goal_id) {
 // Add a goal
 async function addGoal(goal) {
   const addedGoal = await db("goals").insert(goal, "id");
-  return getGoalById(addedGoal.id);
+  return getGoalById(addedGoal[0]);
 }
 // Update a goal
 async function updateGoal(updatedGoal, id) {
   const newGoal = await db("goals").where({ id }).update(updatedGoal);
-  return getGoalById(newGoal.id);
+  return getGoalById(newGoal[0]);
 }
 // Delete a goal
 async function deleteGoal(goal_id) {
   const deletedGoal = await db("goals").where({ id: goal_id }).del();
-  return getGoalById(deletedGoal.id);
+  return getGoalById(deletedGoal[0]);
 }
