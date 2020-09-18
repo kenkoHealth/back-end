@@ -2,6 +2,7 @@ const express = require("express");
 const goals = require("../models/goalModels");
 const router = express.Router();
 const authmw = require("../auth/authMiddleware");
+const asyncMiddleware = require("../utils/asyncMiddleware");
 
 // Endpoint to retrieve all goals
 router.get("/", async (req, res) => {
@@ -65,6 +66,27 @@ router.post("/", async (req, res) => {
     }
   } catch (e) {
     res.status(500).json({ error: e.response, message: `Unable to add Goal.` });
+  }
+});
+// Delete a goal
+router.delete("/", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await goals.deleteGoal(id);
+    if (!id) {
+      res
+        .status(404)
+        .json({ message: `Goal with ID of ${id} does not exist.` });
+    } else
+      res.status(200).json({
+        data: result,
+        message: `Successfully deleted goal with ID of ${id}.`,
+      });
+  } catch (e) {
+    res.status(500).json({
+      error: e.response,
+      message: `Unable to delete user with the ID of ${id}.`,
+    });
   }
 });
 module.exports = router;
