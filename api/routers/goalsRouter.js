@@ -69,17 +69,16 @@ router.post("/", async (req, res) => {
   }
 });
 // Delete a goal
-router.delete("/", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const result = await goals.deleteGoal(id);
-    if (!id) {
+    if (!result) {
       res
         .status(404)
         .json({ message: `Goal with ID of ${id} does not exist.` });
     } else
       res.status(200).json({
-        data: result,
         message: `Successfully deleted goal with ID of ${id}.`,
       });
   } catch (e) {

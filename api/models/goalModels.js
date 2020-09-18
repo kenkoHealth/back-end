@@ -45,5 +45,5 @@ async function updateGoal(updatedGoal, id) {
 // Delete a goal
 async function deleteGoal(goal_id) {
   const deletedGoal = await db("goals").where({ id: goal_id }).del();
-  return getGoalById(deletedGoal[0]);
+  return getGoalById(deletedGoal);
 }
