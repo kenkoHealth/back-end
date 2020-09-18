@@ -46,4 +46,22 @@ router.get("/goal/:id", async (req, res) => {
       .json({ error: e, message: `Failed to retrieve Goal with ID of ${id}.` });
   }
 });
+// Add a goal for a specific user
+router.post("/", async (req, res) => {
+  const newGoal = req.body;
+  try {
+    const result = await goals.addGoal(newGoal);
+    // Loop over newGoal object, if any of the values are falsy, throw a bad request error
+    for (let [key, value] of Object.entries(newGoal)) {
+      if (!value) {
+        res.status(400).json({
+          message: `Please make sure all required fields are populated before sending request.`,
+        });
+      }
+    }
+    res.status(200).json(result);
+  } catch (e) {
+    res.status(500).json({ error: e, message: `Unable to add Goal.` });
+  }
+});
 module.exports = router;
