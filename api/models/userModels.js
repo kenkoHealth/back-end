@@ -11,7 +11,7 @@ module.exports = {
 };
 
 // Return a list of all users in the database
-function findUsers() {
+async function findUsers() {
   return db("users");
 }
 // Return a user based on ID of user
