@@ -4,16 +4,13 @@ const authmw = require("../auth/authMiddleware");
 const router = express.Router();
 
 // Get a list of all users endpoint
-router.get("/", (req, res) => {
-  Users.findUsers()
-    .then((users) => {
-      res.status(200).json(users);
-    })
-    .catch((err) => {
-      res
-        .status(500)
-        .json({ error: err, message: "Failed to retrieve users." });
-    });
+router.get("/", async (req, res) => {
+  try {
+    const users = await Users.findUsers();
+    res.status(200).json(users);
+  } catch (e) {
+    res.status(500).json({ error: err, message: "Failed to retrieve users." });
+  }
 });
 // Retrieve a user by the user's ID endpoint
 router.get("/:id", (req, res) => {
