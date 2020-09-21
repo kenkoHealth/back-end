@@ -36,43 +36,36 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update a user endpoint
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const changes = req.body;
 
-  Users.findUserById(id)
-    .then((user) => {
-      let first_name = user[0]["first_name"];
-      let last_name = user[0]["last_name"];
-      Users.updateUser(id, changes)
-        .then((user) => {
-          const userToChange = user[0];
-          if (
-            changes.first_name === userToChange.first_name &&
-            changes.last_name === userToChange.last_name &&
-            changes.email === userToChange.email &&
-            changes.password === userToChange.password
-          ) {
-            res.status(400).json({
-              error: `Update must include at least one change to the user ${first_name} ${last_name}.`,
-            });
-          } else {
-            res.status(200).json({
-              Message: `User profile ${first_name} ${last_name} successfully updated.`,
-            });
-          }
-        })
-        .catch((err) => {
-          res.status(500).json({
-            message: `Failed to update user with the id of ${id}.`,
-          });
-        });
-    })
-    .catch((err) => {
-      res.status(500).json({
-        error: "Unable to retrieve that user, please pass in a valid user ID.",
+  try {
+    const user = await Users.findUserById(id);
+    let first_name = user[0]["first_name"];
+    let last_name = user[0]["last_name"];
+    const updatedUser = await Users.updateUser(id, changes);
+    const userToChange = user[0];
+    if (
+      changes.first_name === userToChange.first_name &&
+      changes.last_name === userToChange.last_name &&
+      changes.email === userToChange.email &&
+      changes.password === userToChange.password
+    ) {
+      res.status(400).json({
+        error: `Update must include at least one change to the user ${first_name} ${last_name}.`,
       });
+    } else {
+      res.status(200).json({
+        user: updatedUser,
+        Message: `User profile ${first_name} ${last_name} successfully updated.`,
+      });
+    }
+  } catch (e) {
+    res.status(500).json({
+      message: `Failed to update user with the id of ${id}.`,
     });
+  }
 });
 
 // Delete a user endpoint
