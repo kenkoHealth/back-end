@@ -4,7 +4,7 @@ const authmw = require("../auth/authMiddleware");
 const router = express.Router();
 
 // Get a list of all users endpoint
-router.get("/", authmw, (req, res) => {
+router.get("/", (req, res) => {
   Users.findUsers()
     .then((users) => {
       res.status(200).json(users);
@@ -16,7 +16,7 @@ router.get("/", authmw, (req, res) => {
     });
 });
 // Retrieve a user by the user's ID endpoint
-router.get("/:id", authmw, (req, res) => {
+router.get("/:id", (req, res) => {
   const { id } = req.params;
 
   Users.findUserById(id)
@@ -39,7 +39,7 @@ router.get("/:id", authmw, (req, res) => {
 });
 
 // Update a user endpoint
-router.put("/:id", authmw, (req, res) => {
+router.put("/:id", (req, res) => {
   const { id } = req.params;
   const changes = req.body;
 
@@ -79,7 +79,7 @@ router.put("/:id", authmw, (req, res) => {
 });
 
 // Delete a user endpoint
-router.delete("/:id", authmw, (req, res) => {
+router.delete("/:id", (req, res) => {
   const { id } = req.params;
 
   Users.destroyUser(id)
