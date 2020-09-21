@@ -9,30 +9,30 @@ router.get("/", async (req, res) => {
     const users = await Users.findUsers();
     res.status(200).json(users);
   } catch (e) {
-    res.status(500).json({ error: err, message: "Failed to retrieve users." });
+    res
+      .status(500)
+      .json({ error: e.response, message: "Failed to retrieve users." });
   }
 });
 // Retrieve a user by the user's ID endpoint
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
-
-  Users.findUserById(id)
-    .then((user) => {
-      if (user.length > 0) {
-        res.status(200);
-        res.json(user);
-      } else {
-        res
-          .status(404)
-          .json({ message: `Could not find a user with the ID of ${id}.` });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({
-        message: "Unable to retrieve that user.",
-        error: err,
-      });
+  try {
+    const user = await Users.findUserById(id);
+    if (user.length > 0) {
+      res.status(200);
+      res.json(user);
+    } else {
+      res
+        .status(404)
+        .json({ message: `Could not find a user with the ID of ${id}.` });
+    }
+  } catch (e) {
+    res.status(500).json({
+      message: "Unable to retrieve that user.",
+      error: e.response,
     });
+  }
 });
 
 // Update a user endpoint
