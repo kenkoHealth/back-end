@@ -40,6 +40,8 @@ function updateUser(id, updatedUser) {
     });
 }
 // Remove a user from the database by ID
-function destroyUser(id) {
-  return db("users").where({ id }).del();
+async function destroyUser(id) {
+  const deletedUser = await db("users").where({ id }).del();
+  console.log(deletedUser);
+  return findUserById(deletedUser[0]);
 }
