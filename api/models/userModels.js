@@ -32,6 +32,7 @@ async function addUser(newUser) {
   return findUserById(addedUser[0]);
 }
 // Update user in database by ID
+// ** NEED TO FIGURE OUT WHY THIS DOESN'T WORK **
 async function updateUser(id, updatedUser) {
   const user = await db("users").where({ id }).update(updatedUser);
   return findUserById(user[0]);
