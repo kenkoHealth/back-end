@@ -1,5 +1,6 @@
 // Bring in database for model queries
 const db = require("../../data/dbConfig");
+const { getGoalById } = require("./goalModels");
 
 module.exports = {
   findUsers,
@@ -12,34 +13,32 @@ module.exports = {
 
 // Return a list of all users in the database
 async function findUsers() {
-  return db("users");
+  const results = await db.select("*").from("users");
+  return results;
 }
 // Return a user based on ID of user
-function findUserById(id) {
-  return db("users").where({ id: id });
+async function findUserById(id) {
+  const result = await db("users").where({ id: id }).first();
+  return result;
 }
 // Utility function to allow user login via email
-function findBy(filter) {
-  return db("users").where({ email: filter });
+async function findBy(filter) {
+  const result = await db("users").where({ email: filter });
+  return result;
 }
 // Add a new user into the database
-function addUser(newUser) {
-  return db("users")
-    .insert(newUser, "id")
-    .then((id) => {
-      return findUserById(id[0]);
-    });
+async function addUser(newUser) {
+  const addedUser = await db("users").insert(newUser, "id");
+  return findUserById(addedUser[0]);
 }
 // Update user in database by ID
-function updateUser(id, updatedUser) {
-  return db("users")
-    .where({ id })
-    .update(updatedUser)
-    .then(() => {
-      return findUserById(id);
-    });
+// ** NEED TO FIGURE OUT WHY THIS DOESN'T WORK **
+async function updateUser(id, updatedUser) {
+  const user = await db("users").where({ id }).update(updatedUser);
+  return findUserById(user[0]);
 }
 // Remove a user from the database by ID
-function destroyUser(id) {
-  return db("users").where({ id }).del();
+async function destroyUser(id) {
+  const deletedUser = await db("users").where({ id }).del();
+  return getGoalById(deletedUser);
 }

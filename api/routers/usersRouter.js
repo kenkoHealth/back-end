@@ -19,7 +19,7 @@ router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const user = await Users.findUserById(id);
-    if (user.length > 0) {
+    if (user) {
       res.status(200);
       res.json(user);
     } else {
@@ -46,6 +46,7 @@ router.put("/:id", async (req, res) => {
     let last_name = user[0]["last_name"];
     const updatedUser = await Users.updateUser(id, changes);
     const userToChange = user[0];
+    console.log(userToChange);
     if (
       changes.first_name === userToChange.first_name &&
       changes.last_name === userToChange.last_name &&
@@ -63,6 +64,7 @@ router.put("/:id", async (req, res) => {
     }
   } catch (e) {
     res.status(500).json({
+      error: e.response,
       message: `Failed to update user with the id of ${id}.`,
     });
   }
