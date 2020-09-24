@@ -69,27 +69,25 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete a user endpoint
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
-
-  Users.destroyUser(id)
-    .then((deleted) => {
-      if (deleted) {
-        res.status(200);
-        res.json({
-          Message: `You have successfully removed the user with the id ${id}`,
-        });
-      } else {
-        res.status(404).json({
-          message: "Could not find and delete User with the given ID",
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err, message: "Failed to delete User" });
+  try {
+    const deletedUser = await Users.destroyUser(id);
+    if (!deletedUser) {
+      res
+        .status(404)
+        .json({ message: `User with ID of ${id} does not exist.` });
+    } else {
+      res
+        .status(200)
+        .json({ message: `Successfully deleted user with the ID of ${id}.` });
+    }
+  } catch (e) {
+    res.status(500).json({
+      error: e.response,
+      message: `Failed to delete user with the ID of ${id}.`,
     });
+  }
 });
-
-// ** I need to alter the users/goals tables to automatically delete goals for users when that user is deleted **
 
 module.exports = router;
