@@ -39,13 +39,9 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const changes = req.body;
-
+  const userToChange = await Users.findUserById(id);
   try {
     const user = await Users.updateUser(id, changes);
-    let first_name = user[0]["first_name"];
-    let last_name = user[0]["last_name"];
-    // const updatedUser = await Users.updateUser(id, changes);
-    const userToChange = user[0];
     if (
       changes.first_name === userToChange.first_name &&
       changes.last_name === userToChange.last_name &&
@@ -53,12 +49,16 @@ router.put("/:id", async (req, res) => {
       changes.password === userToChange.password
     ) {
       res.status(400).json({
-        error: `Update must include at least one change to the user ${first_name} ${last_name}.`,
+        error: `Update must include at least one change to the user.`,
+      });
+    }
+    if (user) {
+      res.status(200).json({
+        Message: `User profile with ID of ${id} successfully updated.`,
       });
     } else {
-      res.status(200).json({
-        user: updatedUser,
-        Message: `User profile ${first_name} ${last_name} successfully updated.`,
+      res.status(404).json({
+        message: `No user found with the ID of ${id}.`,
       });
     }
   } catch (e) {
