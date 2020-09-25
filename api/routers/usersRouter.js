@@ -41,12 +41,11 @@ router.put("/:id", async (req, res) => {
   const changes = req.body;
 
   try {
-    const user = await Users.findUserById(id);
+    const user = await Users.updateUser(id, changes);
     let first_name = user[0]["first_name"];
     let last_name = user[0]["last_name"];
-    const updatedUser = await Users.updateUser(id, changes);
+    // const updatedUser = await Users.updateUser(id, changes);
     const userToChange = user[0];
-    console.log(userToChange);
     if (
       changes.first_name === userToChange.first_name &&
       changes.last_name === userToChange.last_name &&
