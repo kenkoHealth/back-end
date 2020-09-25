@@ -5,7 +5,7 @@ const authmw = require("../auth/authMiddleware");
 const asyncMiddleware = require("../utils/asyncMiddleware");
 
 // Endpoint to retrieve all goals
-router.get("/", async (req, res) => {
+router.get("/", authmw, async (req, res) => {
   try {
     const results = await goals.getGoals();
     res.status(200).json(results);
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
   }
 });
 // Retrieve goals by a specific user ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", authmw, async (req, res) => {
   const { id } = req.params;
   try {
     const results = await goals.getGoalByUserId(id);
@@ -35,7 +35,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 // Get a specific goal from any user by it's ID
-router.get("/goal/:id", async (req, res) => {
+router.get("/goal/:id", authmw, async (req, res) => {
   const { id } = req.params;
   try {
     const result = await goals.getGoalById(id);
@@ -52,7 +52,7 @@ router.get("/goal/:id", async (req, res) => {
   }
 });
 // Add a goal for a specific user
-router.post("/", async (req, res) => {
+router.post("/", authmw, async (req, res) => {
   const newGoal = req.body;
   try {
     const result = await goals.addGoal(newGoal);
@@ -69,7 +69,7 @@ router.post("/", async (req, res) => {
   }
 });
 // Delete a goal
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authmw, async (req, res) => {
   const { id } = req.params;
   try {
     const result = await goals.deleteGoal(id);
