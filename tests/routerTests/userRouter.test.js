@@ -1,34 +1,13 @@
+const testUtils = require("../testUtils/utilityUser");
+
 // User Routes tests
 const request = require("supertest");
 const server = require("../../server");
 
-// Utility function to generate test users
-function generateUser(pass, first, last) {
-  const randomUserNum = Math.random() * 5000;
-  let testUser = {
-    email: `kenkoTest${randomUserNum}@email.com`,
-    password: pass,
-    first_name: first,
-    last_name: last,
-  };
-  return testUser;
-}
-
-// Could write another utility function to register/login a user to help clean up test code a bit
-async function authenticateForTest() {
-  const user = generateUser("KenkoTest5", "Erica", "Sims");
-  const response = await request(server).post("/api/auth/register").send(user);
-
-  const login = await request(server).post("/api/auth/login").send({
-    email: user.email,
-    password: user.password,
-  });
-  return login;
-}
 // Test get all users endpoint. (Routes are protected, will need to register and login in order to access)
 describe("Successfully returns an array of all users", () => {
   it("Successfully returns status code 200 on request", async () => {
-    let authenticated = await authenticateForTest();
+    let authenticated = await testUtils.authenticateForTest();
     const currentToken = authenticated.body.token;
     let getUsers = await request(server)
       .get("/api/users/")
@@ -43,7 +22,7 @@ describe("Successfully returns an array of all users", () => {
 // Test getting a specific user by ID
 describe("Test get an individual user from database", () => {
   it("Successfully returns an array of length 1 with a status code of 200", async () => {
-    let authenticated = await authenticateForTest();
+    let authenticated = await testUtils.authenticateForTest();
     const currentToken = authenticated.body.token;
     let getSingleUser = await request(server)
       .get(`/api/users/${authenticated.body.current_user.id}`)
@@ -56,7 +35,7 @@ describe("Test get an individual user from database", () => {
 // Test Update a user
 describe("Test updating a specific user in the database", () => {
   it("Successfully updates the user and returns status code 200", async () => {
-    let authenticated = await authenticateForTest();
+    let authenticated = testUtils.authenticateForTest();
     const currentToken = authenticated.body.token;
     let updateSingleUser = await request(server)
       .put(`/api/users/${authenticated.body.current_user.id}`)
@@ -72,7 +51,7 @@ describe("Test updating a specific user in the database", () => {
 // Test if we can successfully delete a user
 describe("Test deleting a user from the database by ID", () => {
   it("Successfully deletes a user and returns status code 200", async () => {
-    let authenticated = await authenticateForTest();
+    let authenticated = testUtils.authenticateForTest();
     const currentToken = authenticated.body.token;
     let deleteSingleUser = await request(server)
       .delete(`/api/users/${authenticated.body.current_user.id}`)
@@ -85,7 +64,7 @@ describe("Test deleting a user from the database by ID", () => {
     expect(deleteSingleUser.body).toBeType(successfulDelete, "object");
   });
   it("Successfully returns a failure for incorrect user ID passed in", async () => {
-    let authenticated = await authenticateForTest();
+    let authenticated = testUtils.authenticateForTest();
     const currentToken = authenticated.body.token;
     let deleteSingleUser = await request(server)
       .delete(`/api/users/${Math.random() * 5000}`)
