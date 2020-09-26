@@ -1,3 +1,6 @@
+const request = require("supertest");
+const server = require("../../server");
+
 // Generates a fake user and returns
 function generateUser(pass, first, last) {
   const randomUserNum = Math.random() * 5000;
