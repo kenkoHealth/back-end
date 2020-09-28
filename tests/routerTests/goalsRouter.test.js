@@ -1,15 +1,16 @@
 const testUtils = require("../testUtils/utilityUser");
-const request = require("../../server");
-const server = require("supertest");
+const request = require("supertest");
+const server = require("../../server");
 
 // Test If we can receive all goals in the database
 describe("Successfully returns an array of all goals in the database", () => {
-  it("Successfully returns a status code 200", async () => {
+  it("Successfully returns an array of goals, and status code 200", async () => {
     const authenticated = await testUtils.authenticateForTest();
     const currentToken = authenticated.body.token;
-    const goals = await request(server)
+    let goals = await request(server)
       .get("/api/goals/")
-      .set("cookie", currentToken);
+      .set("Cookie", currentToken);
     expect(goals.status).toBe(200);
+    expect(goals.body).toBeArray();
   });
 });
