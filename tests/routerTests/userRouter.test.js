@@ -28,14 +28,14 @@ describe("Test get an individual user from database", () => {
       .get(`/api/users/${authenticated.body.current_user.id}`)
       .set("Cookie", currentToken);
     expect(getSingleUser.status).toBe(200);
-    expect(getSingleUser.body.length).toEqual(1);
+    expect(getSingleUser.body).toBeDefined();
   });
 });
 
 // Test Update a user
 describe("Test updating a specific user in the database", () => {
   it("Successfully updates the user and returns status code 200", async () => {
-    let authenticated = testUtils.authenticateForTest();
+    let authenticated = await testUtils.authenticateForTest();
     const currentToken = authenticated.body.token;
     let updateSingleUser = await request(server)
       .put(`/api/users/${authenticated.body.current_user.id}`)
@@ -43,7 +43,7 @@ describe("Test updating a specific user in the database", () => {
       .send({ first_name: `Sam` });
     expect(updateSingleUser.status).toBe(200);
     expect(updateSingleUser.body).toEqual({
-      Message: `User profile ${authenticated.body.current_user.first_name} ${authenticated.body.current_user.last_name} successfully updated.`,
+      Message: `User profile with ID of ${authenticated.body.current_user.id} successfully updated.`,
     });
   });
 });
@@ -51,7 +51,7 @@ describe("Test updating a specific user in the database", () => {
 // Test if we can successfully delete a user
 describe("Test deleting a user from the database by ID", () => {
   it("Successfully deletes a user and returns status code 200", async () => {
-    let authenticated = testUtils.authenticateForTest();
+    let authenticated = await testUtils.authenticateForTest();
     const currentToken = authenticated.body.token;
     let deleteSingleUser = await request(server)
       .delete(`/api/users/${authenticated.body.current_user.id}`)
@@ -59,12 +59,12 @@ describe("Test deleting a user from the database by ID", () => {
     const successfulDelete = typeof deleteSingleUser.body;
     expect(deleteSingleUser.status).toBe(200);
     expect(deleteSingleUser.body).toEqual({
-      Message: `You have successfully removed the user with the id ${authenticated.body.current_user.id}`,
+      message: `Successfully deleted user with the ID of ${authenticated.body.current_user.id}.`,
     });
     expect(deleteSingleUser.body).toBeType(successfulDelete, "object");
   });
   it("Successfully returns a failure for incorrect user ID passed in", async () => {
-    let authenticated = testUtils.authenticateForTest();
+    let authenticated = await testUtils.authenticateForTest();
     const currentToken = authenticated.body.token;
     let deleteSingleUser = await request(server)
       .delete(`/api/users/${Math.random() * 5000}`)

@@ -22,8 +22,9 @@ async function findUserById(id) {
   return result;
 }
 // Utility function to allow user login via email
+// **This function needs to return the full user object**
 async function findBy(filter) {
-  const result = await db("users").where({ email: filter });
+  const result = await db("users").where({ email: filter }).first();
   return result;
 }
 // Add a new user into the database
