@@ -26,7 +26,6 @@ router.post("/register", (req, res) => {
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
   Users.findBy(email)
-    .first()
     .then((user) => {
       if (user && bcrypt.compareSync(password, user.password)) {
         // Generate token on login as well as register
