@@ -40,3 +40,26 @@ describe("Successfully returns an array of all goals for a specific user", () =>
     });
   });
 });
+
+// Test for the Retrieval of a specific goal by it's unique ID
+describe("Sucessfully returns a goal object corresponding to given ID in request params", () => {
+  it("Successfully returns a valid goal object, and status code 200", async () => {
+    const authenticated = await testUtils.authenticateForTest();
+    const currentToken = authenticated.body.token;
+    const goals = await request(server)
+      .get("/api/goals/")
+      .set("Cookie", currentToken);
+    // Map over goals.body and retrieve the id's to store in array
+    const goalIDs = goals.body.map((goal) => {
+      return goal.id;
+    });
+    // Randomly select an id and use to make request for a single goal.
+    const randomID =
+      Math.random() * (goalIDs[goalIDs.length - 1] - goalIDs[0]) + goalIDs[0];
+    const singleGoal = await request(server)
+      .get(`/api/goals/goal/${Math.floor(randomID)}`)
+      .set("Cookie", currentToken);
+    expect(singleGoal.status).toBe(200);
+    expect(singleGoal.body).toBeDefined();
+  });
+});
