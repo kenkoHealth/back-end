@@ -1,5 +1,3 @@
-const e = require("express");
-
 // Custom Jest matcher to test Object type.
 expect.extend({
   toBeType(receivedInput, arg) {
