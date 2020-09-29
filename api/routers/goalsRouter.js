@@ -39,7 +39,7 @@ router.get("/goal/:id", authmw, async (req, res) => {
   const { id } = req.params;
   try {
     const result = await goals.getGoalById(id);
-    if (!id) {
+    if (result === undefined) {
       res
         .status(404)
         .json({ message: `Goal with ID of ${id} does not exist.` });

@@ -62,4 +62,17 @@ describe("Sucessfully returns a goal object corresponding to given ID in request
     expect(singleGoal.status).toBe(200);
     expect(singleGoal.body).toBeDefined();
   });
+  it("Successfully returns a correct error when passing in an ID that does not exist", async () => {
+    const authenticated = await testUtils.authenticateForTest();
+    const currentToken = authenticated.body.token;
+    const randomID = Math.floor(Math.random() * 5000);
+    const singleGoal = await request(server)
+      .get(`/api/goals/goal/${randomID}`)
+      .set("Cookie", currentToken);
+    console.log(singleGoal);
+    expect(singleGoal.status).toBe(404);
+    expect(singleGoal.body).toEqual({
+      message: `Goal with ID of ${randomID} does not exist.`,
+    });
+  });
 });
