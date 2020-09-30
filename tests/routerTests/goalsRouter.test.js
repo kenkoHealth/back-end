@@ -1,4 +1,5 @@
 const testUtils = require("../testUtils/utilityUser");
+const goalUtils = require("../testUtils/utilityGoals");
 const request = require("supertest");
 const server = require("../../server");
 
@@ -69,10 +70,30 @@ describe("Sucessfully returns a goal object corresponding to given ID in request
     const singleGoal = await request(server)
       .get(`/api/goals/goal/${randomID}`)
       .set("Cookie", currentToken);
-    console.log(singleGoal);
     expect(singleGoal.status).toBe(404);
     expect(singleGoal.body).toEqual({
       message: `Goal with ID of ${randomID} does not exist.`,
     });
+  });
+});
+
+// Test the ability to add a goal for a specific user
+describe("Successfully adds a goal to logged in user", () => {
+  it("Successfully returns the added goal object, and status code 200", async () => {
+    const authenticated = await testUtils.authenticateForTest();
+    const currentToken = authenticated.body.token;
+    const testUserID = authenticated.body.current_user.id;
+    const addedGoal = await request(server)
+      .post("/api/goals/")
+      .set("Cookie", currentToken)
+      .send(
+        goalUtils.generateGoal(
+          "test goal",
+          "testing the goal",
+          "2020-11-01",
+          testUserID
+        )
+      );
+    expect(addedGoal.status).toBe(200);
   });
 });
