@@ -62,8 +62,9 @@ router.post("/", authmw, async (req, res) => {
         res.status(400).json({
           message: `Please make sure all required fields are populated before sending request.`,
         });
-      } else res.status(200).json(result);
+      }
     }
+    res.status(200).json(result);
   } catch (e) {
     res.status(500).json({ error: e.response, message: `Unable to add Goal.` });
   }
