@@ -115,4 +115,16 @@ describe("Successfully adds a goal to logged in user", () => {
       message: "Please login and try again!",
     });
   });
+  it("Successfully errors out if required fields for goal object are not passed", async () => {
+    const authenticated = await testUtils.authenticateForTest();
+    const currentToken = authenticated.body.token;
+    const addedGoal = await request(server)
+      .post("/api/goals/")
+      .set("Cookie", currentToken)
+      .send({});
+    expect(addedGoal.status).toBe(400);
+    expect(addedGoal.body).toEqual({
+      message: `Please make sure all required fields are populated before sending request.`,
+    });
+  });
 });
