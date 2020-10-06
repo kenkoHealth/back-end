@@ -128,3 +128,5 @@ describe("Successfully adds a goal to logged in user", () => {
     });
   });
 });
+
+// Test for successful deletion of a user to go here!
