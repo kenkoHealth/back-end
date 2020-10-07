@@ -130,3 +130,13 @@ describe("Successfully adds a goal to logged in user", () => {
 });
 
 // Test for successful deletion of a user to go here!
+describe("Successfully removes a goal from a user", () => {
+  it("Successfully returns a status 200 after successful deletion", async () => {
+    const authenticated = await testUtils.authenticateForTest();
+    const currentToken = authenticated.body.token;
+    const deleted = await request(server)
+      .delete(`/api/goals/${someData}`) // Need to add a goal, get the goal's ID and pass it to the delete route. <-- TODO
+      .set("Cookie", currentToken);
+  });
+  expect(deleted.status).toBe(200);
+});
