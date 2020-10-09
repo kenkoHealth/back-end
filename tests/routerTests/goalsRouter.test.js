@@ -133,10 +133,22 @@ describe("Successfully adds a goal to logged in user", () => {
 describe("Successfully removes a goal from a user", () => {
   it("Successfully returns a status 200 after successful deletion", async () => {
     const authenticated = await testUtils.authenticateForTest();
+    const testUserID = authenticated.body.current_user.id;
     const currentToken = authenticated.body.token;
+    // Add a goal and retrieve it's ID
+    const addedGoal = await request(server)
+      .post('/api/goals/').set('Cookie', currentToken)
+      .send(
+        goalUtils.generateGoal(
+          'goal to test delete',
+          'testingdel1234',
+          '2020-11-09',
+          testUserID
+        )
+      );
     const deleted = await request(server)
-      .delete(`/api/goals/${someData}`) // Need to add a goal, get the goal's ID and pass it to the delete route. <-- TODO
+      .delete(`/api/goals/${addedGoal.body.id}`)
       .set("Cookie", currentToken);
+    expect(deleted.status).toBe(200);
   });
-  expect(deleted.status).toBe(200);
 });
