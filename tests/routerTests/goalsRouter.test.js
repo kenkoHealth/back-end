@@ -122,9 +122,9 @@ describe("Successfully adds a goal to logged in user", () => {
       .post("/api/goals/")
       .set("Cookie", currentToken)
       .send({});
-    expect(addedGoal.status).toBe(400);
+    expect(addedGoal.status).toBe(500); // Expected to hit the catch and fail with 500.
     expect(addedGoal.body).toEqual({
-      message: `Please make sure all required fields are populated before sending request.`,
+      message: `Unable to add Goal.`,
     });
   });
 });
@@ -137,12 +137,13 @@ describe("Successfully removes a goal from a user", () => {
     const currentToken = authenticated.body.token;
     // Add a goal and retrieve it's ID
     const addedGoal = await request(server)
-      .post('/api/goals/').set('Cookie', currentToken)
+      .post("/api/goals/")
+      .set("Cookie", currentToken)
       .send(
         goalUtils.generateGoal(
-          'goal to test delete',
-          'testingdel1234',
-          '2020-11-09',
+          "goal to test delete",
+          "testingdel1234",
+          "2020-11-09",
           testUserID
         )
       );
