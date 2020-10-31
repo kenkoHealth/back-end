@@ -59,12 +59,13 @@ router.post("/", authmw, async (req, res) => {
     // Loop over newGoal object, if any of the values are falsy, throw a bad request error
     for (let [key, value] of Object.entries(newGoal)) {
       if (!value) {
-        res.status(400).json({
-          message: `Please make sure all required fields are populated before sending request.`,
-        });
+        // Just logging out a helpful error message to the console before the catch is sent back.
+        console.log(
+          `Please make sure all required fields are populated before sending request.`
+        );
       }
     }
-    // Issue was only returning a 200 and result if the initial 'if' in for loop was failing. Date: 10-2-2020
+    // Issue was only returning a 200 and result in the initial 'if' in for loop was failing. Date: 10-2-2020
     res.status(200).json(result);
   } catch (e) {
     res.status(500).json({ error: e.response, message: `Unable to add Goal.` });
