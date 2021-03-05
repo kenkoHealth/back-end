@@ -1,20 +1,19 @@
 const request = require("supertest");
 const server = require("../../server");
+const faker = require("faker");
 
-// Generates a fake user and returns
-function generateUser(pass, first, last) {
-  const randomUserNum = Math.random() * 5000;
+function generateUser() {
   let testUser = {
-    email: `kenkoTest${randomUserNum}@email.com`,
-    password: pass,
-    first_name: first,
-    last_name: last,
+    email: faker.internet.email(),
+    password: faker.internet.password(),
+    first_name: faker.name.firstName(),
+    last_name: faker.name.lastName(),
   };
   return testUser;
 }
-// Function to authenticate a user
+
 async function authenticateForTest() {
-  const user = generateUser("KenkoTest5", "Erica", "Sims");
+  const user = generateUser();
   const response = await request(server).post("/api/auth/register").send(user);
 
   const login = await request(server).post("/api/auth/login").send({
