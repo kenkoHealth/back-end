@@ -1,6 +1,6 @@
 const request = require("supertest");
 const server = require("../../server");
-const faker = require("faker");
+// const faker = require("faker");
 
 function generateUser() {
   let testUser = {
