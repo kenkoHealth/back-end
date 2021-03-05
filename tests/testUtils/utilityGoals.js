@@ -1,9 +1,11 @@
-function generateGoal(name, description, date, user) {
+const faker = require("faker");
+
+function generateGoal(user_id) {
   return {
-    goal_name: name,
-    goal_description: description,
-    goal_date: date,
-    goal_user: user,
+    goal_name: faker.lorem.word(),
+    goal_description: faker.lorem.sentences(2),
+    goal_date: faker.date.soon(30),
+    goal_user: user_id,
   };
 }
 

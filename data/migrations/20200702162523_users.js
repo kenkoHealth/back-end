@@ -1,7 +1,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable("users", (table) => {
     // Incrementing primary key ID
-    table.increments();
+    table.uuid("id").primary();
     // Email is required, must be unique.
     table.string("email", 128).notNullable().unique();
     // Password field, required.
