@@ -55,10 +55,9 @@ describe("Sucessfully returns a goal object corresponding to given ID in request
       return goal.id;
     });
     // Randomly select an id and use to make request for a single goal.
-    const randomID =
-      Math.random() * (goalIDs[goalIDs.length - 1] - goalIDs[0]) + goalIDs[0];
+    const randomID = Math.floor(Math.random() * goalIDs.length);
     const singleGoal = await request(server)
-      .get(`/api/goals/goal/${Math.floor(randomID)}`)
+      .get(`/api/goals/goal/${goalIDs[randomID]}`)
       .set("Cookie", currentToken);
     expect(singleGoal.status).toBe(200);
     expect(singleGoal.body).toBeDefined();
@@ -86,14 +85,7 @@ describe("Successfully adds a goal to logged in user", () => {
     const addedGoal = await request(server)
       .post("/api/goals/")
       .set("Cookie", currentToken)
-      .send(
-        goalUtils.generateGoal(
-          "test goal",
-          "testing the goal",
-          "2020-11-01",
-          testUserID
-        )
-      );
+      .send(goalUtils.generateGoal(testUserID));
     expect(addedGoal.status).toBe(200);
     expect(addedGoal.body).toBeDefined();
   });
@@ -102,14 +94,7 @@ describe("Successfully adds a goal to logged in user", () => {
     const testUserID = authenticated.body.current_user.id;
     const addedGoal = await request(server)
       .post("/api/goals/")
-      .send(
-        goalUtils.generateGoal(
-          "test goal that should fail",
-          "testing the bad request",
-          "2020-11-03",
-          testUserID
-        )
-      );
+      .send(goalUtils.generateGoal(testUserID));
     expect(addedGoal.status).toBe(400);
     expect(addedGoal.body).toEqual({
       message: "Please login and try again!",
@@ -139,14 +124,7 @@ describe("Successfully removes a goal from a user", () => {
     const addedGoal = await request(server)
       .post("/api/goals/")
       .set("Cookie", currentToken)
-      .send(
-        goalUtils.generateGoal(
-          "goal to test delete",
-          "testingdel1234",
-          "2020-11-09",
-          testUserID
-        )
-      );
+      .send(goalUtils.generateGoal(testUserID));
     const deleted = await request(server)
       .delete(`/api/goals/${addedGoal.body.id}`)
       .set("Cookie", currentToken);

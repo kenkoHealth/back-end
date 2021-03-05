@@ -76,6 +76,7 @@ router.delete("/:id", authmw, async (req, res) => {
   const { id } = req.params;
   try {
     const result = await goals.deleteGoal(id);
+    // console.log(result, "Result of goal deletion in test");
     if (!result) {
       res
         .status(404)
