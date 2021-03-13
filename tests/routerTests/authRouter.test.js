@@ -50,7 +50,7 @@ describe("User should be able to successfully login after registering", () => {
   it("Should return a status code 401 if user is not properly authenticated", async () => {
     let testUser = userUtility.generateUser();
     let login = await request(server).post("/api/auth/login").send({
-      email: "kenkotest@email.com",
+      email: "shouldFail@email.com",
       password: testUser.password,
     });
     expect(login.status).toBe(401);
