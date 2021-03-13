@@ -1,9 +1,11 @@
 const request = require("supertest");
 const server = require("../../server");
-// const faker = require("faker");
+const faker = require("faker");
+const { v4: uuidv4 } = require("uuid");
 
 function generateUser() {
   let testUser = {
+    id: uuidv4(),
     email: faker.internet.email(),
     password: faker.internet.password(),
     first_name: faker.name.firstName(),

@@ -39,7 +39,7 @@ router.get("/goal/:id", authmw, async (req, res) => {
   const { id } = req.params;
   try {
     const result = await goals.getGoalById(id);
-    if (result === undefined) {
+    if (!result) {
       res
         .status(404)
         .json({ message: `Goal with ID of ${id} does not exist.` });
@@ -65,7 +65,6 @@ router.post("/", authmw, async (req, res) => {
         );
       }
     }
-    // Issue was only returning a 200 and result in the initial 'if' in for loop was failing. Date: 10-2-2020
     res.status(200).json(result);
   } catch (e) {
     res.status(500).json({ error: e.response, message: `Unable to add Goal.` });
@@ -76,7 +75,6 @@ router.delete("/:id", authmw, async (req, res) => {
   const { id } = req.params;
   try {
     const result = await goals.deleteGoal(id);
-    // console.log(result, "Result of goal deletion in test");
     if (!result) {
       res
         .status(404)

@@ -2,6 +2,7 @@ const testUtils = require("../testUtils/utilityUser");
 const goalUtils = require("../testUtils/utilityGoals");
 const request = require("supertest");
 const server = require("../../server");
+const { v4: uuidv4 } = require("uuid");
 
 // Test If we can receive all goals in the database
 describe("Successfully returns an array of all goals in the database", () => {
@@ -65,7 +66,7 @@ describe("Sucessfully returns a goal object corresponding to given ID in request
   it("Successfully returns a correct error when passing in an ID that does not exist", async () => {
     const authenticated = await testUtils.authenticateForTest();
     const currentToken = authenticated.body.token;
-    const randomID = Math.floor(Math.random() * 5000);
+    const randomID = uuidv4();
     const singleGoal = await request(server)
       .get(`/api/goals/goal/${randomID}`)
       .set("Cookie", currentToken);
