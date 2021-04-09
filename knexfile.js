@@ -32,7 +32,7 @@ module.exports = {
       port: 5432,
       user: "postgres",
       password: process.env.LOCAL_PASSWORD,
-      database: "Kenko-BE-Test",
+      database: "Kenko-test",
     },
     migrations: {
       directory: "./data/migrations",
