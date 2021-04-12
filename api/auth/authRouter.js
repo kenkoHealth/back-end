@@ -8,7 +8,6 @@ require("dotenv").config();
 // Register a user endpoint
 router.post("/register", async (req, res) => {
   const user = req.body;
-  console.log(user);
   // Hash user's password with bcryptjs
   const hash = bcrypt.hashSync(user.password, 12);
   // Assign user's password to hashed pw
