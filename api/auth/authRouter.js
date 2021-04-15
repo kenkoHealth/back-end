@@ -8,12 +8,13 @@ require("dotenv").config();
 // Register a user endpoint
 router.post("/register", async (req, res) => {
   const user = req.body;
-  // Hash user's password with bcryptjs
   if (user.password) {
+    // Hash user's password with bcryptjs
     const hash = bcrypt.hashSync(user.password, 12);
     // Assign user's password to hashed pw
     user.password = hash;
   }
+  // If both fields are passed and valid, create the user
   if (user.email && user.password) {
     Users.addUser(user)
       .then((savedUser) => {
@@ -23,6 +24,7 @@ router.post("/register", async (req, res) => {
       .catch((err) => {
         res.status(500).json({ error: err, message: "Unable to add User" });
       });
+    // Otherwise, error out
   } else
     res.status(400).json({
       message: `Please provide both an email and a password when registering.`,
