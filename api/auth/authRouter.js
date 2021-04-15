@@ -9,16 +9,23 @@ require("dotenv").config();
 router.post("/register", async (req, res) => {
   const user = req.body;
   // Hash user's password with bcryptjs
-  const hash = bcrypt.hashSync(user.password, 12);
-  // Assign user's password to hashed pw
-  user.password = hash;
-  Users.addUser(user)
-    .then((savedUser) => {
-      // Return successful request and pass user info back to client.
-      res.status(201).json({ message: `Successfully registered!` });
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err, message: "Unable to add User" });
+  if (user.password) {
+    const hash = bcrypt.hashSync(user.password, 12);
+    // Assign user's password to hashed pw
+    user.password = hash;
+  }
+  if (user.email && user.password) {
+    Users.addUser(user)
+      .then((savedUser) => {
+        // Return successful request and pass user info back to client.
+        res.status(201).json({ message: `Successfully registered!` });
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err, message: "Unable to add User" });
+      });
+  } else
+    res.status(400).json({
+      message: `Please provide both an email and a password when registering.`,
     });
 });
 
