@@ -41,8 +41,9 @@ router.post("/login", (req, res) => {
         const token = generateToken(user);
         res.cookie("token", token, { httpOnly: true });
         res.status(200).json({
-          Message: `Welcome ${user.first_name} ${user.last_name}!`,
+          Message: `Log in Successful!`,
           Status: "Logged in",
+          // We may be able to remove this later
           token: token,
           current_user: { ...user, password: null },
         });
