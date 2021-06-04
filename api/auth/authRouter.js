@@ -43,8 +43,6 @@ router.post("/login", (req, res) => {
         res.status(200).json({
           Message: `Log in Successful!`,
           Status: "Logged in",
-          // We may be able to remove this later
-          token: token,
           current_user: { ...user, password: null },
         });
       } else {
