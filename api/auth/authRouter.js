@@ -43,7 +43,7 @@ router.post("/login", (req, res) => {
         res.status(200).json({
           Message: `Log in Successful!`,
           Status: "Logged in",
-          current_user: { ...user, password: null },
+          current_user: { ...user, password: undefined },
         });
       } else {
         res.status(401).json({ message: "Invalid credentials provided!" });
