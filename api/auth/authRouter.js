@@ -14,8 +14,8 @@ router.post("/register", async (req, res) => {
     // Assign user's password to hashed pw
     user.password = hash;
   }
-  // If both fields are passed and valid, create the user
-  if (user.email && user.password) {
+  // If all the required fields are passed and valid, create the user
+  if (user.email && user.password && user.username) {
     Users.addUser(user)
       .then((savedUser) => {
         // Return successful request and pass user info back to client.
