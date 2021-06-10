@@ -5,13 +5,13 @@ require("dotenv").config();
 
 module.exports = (req, res, next) => {
   // Extraction authorization information from cookies
-  const { cookie } = req.headers;
+  const cookie = req.cookies;
   // Load the secret from .env
   const secret = process.env.JWT_SECRET;
   // If User has provided authorization information...
   if (cookie) {
     // Verify it either returning an error or a decoded token to store
-    jwt.verify(cookie, secret, function (error, decodedToken) {
+    jwt.verify(cookie.token, secret, function (error, decodedToken) {
       if (error) {
         res.status(401).json({ Message: "invalid token given" });
       } else {

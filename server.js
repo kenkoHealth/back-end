@@ -12,12 +12,17 @@ const AuthRouter = require("./api/auth/authRouter.js");
 const goalsRouter = require("./api/routers/goalsRouter.js");
 // Global middleware here...
 server.use(cookieParser());
+// Bring in Cors to prevent cross-origin blocking.
+server.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
+);
 server.use(express.json());
 server.use(helmet());
 // Logging Middleware
 server.use(morgan("tiny"));
-// Bring in Cors to prevent cross-origin blocking.
-server.use(cors());
 
 // Use Express Routers here....
 server.use("/api/users", UsersRouter);
