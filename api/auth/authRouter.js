@@ -42,6 +42,7 @@ router.post("/login", async (req, res) => {
         res.cookie("token", token, {
           httpOnly: true,
           secure: true,
+          // Set a maxAge on the cookie (should expire at same time as the JWT)
         });
         res.status(200).json({
           Message: `Log in Successful!`,
