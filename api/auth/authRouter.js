@@ -32,7 +32,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Login endpoint
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   Users.findBy(email)
     .then((user) => {
@@ -42,6 +42,7 @@ router.post("/login", (req, res) => {
         res.cookie("token", token, {
           httpOnly: true,
           secure: true,
+          // Set a maxAge on the cookie (should expire at same time as the JWT)
         });
         res.status(200).json({
           Message: `Log in Successful!`,
@@ -56,6 +57,11 @@ router.post("/login", (req, res) => {
       console.log(err);
       res.status(500).json({ error: err, message: "Login Failed!" });
     });
+});
+
+// Route to generate CSRF
+router.get("/csrf", (req, res) => {
+  res.status(200).json({ csrfToken: req.csrfToken() });
 });
 
 // ** GENERATE JWT TOKEN FUNCTION **
