@@ -5,11 +5,17 @@ const cors = require("cors");
 const server = express();
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const csrf = require("csurf");
+
+const csrfProtect = csrf({
+  cookie: true,
+});
 
 // Bring in routers
 const UsersRouter = require("./api/routers/usersRouter.js");
 const AuthRouter = require("./api/auth/authRouter.js");
 const goalsRouter = require("./api/routers/goalsRouter.js");
+
 // Global middleware here...
 server.use(cookieParser());
 // Bring in Cors to prevent cross-origin blocking.
@@ -21,6 +27,7 @@ server.use(
 );
 server.use(express.json());
 server.use(helmet());
+server.use(csrfProtect);
 // Logging Middleware
 server.use(morgan("tiny"));
 
