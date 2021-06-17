@@ -59,11 +59,6 @@ router.post("/login", async (req, res) => {
     });
 });
 
-// Route to generate CSRF
-router.get("/csrf", (req, res) => {
-  res.status(200).json({ csrfToken: req.csrfToken() });
-});
-
 // ** GENERATE JWT TOKEN FUNCTION **
 function generateToken(user) {
   const payload = {

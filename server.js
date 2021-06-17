@@ -7,10 +7,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 
-const csrfProtect = csrf({
-  cookie: true,
-});
-
+let csrfProtection = csrf({ cookie: true });
 // Bring in routers
 const UsersRouter = require("./api/routers/usersRouter.js");
 const AuthRouter = require("./api/auth/authRouter.js");
@@ -27,7 +24,6 @@ server.use(
 );
 server.use(express.json());
 server.use(helmet());
-server.use(csrfProtect);
 // Logging Middleware
 server.use(morgan("tiny"));
 
@@ -41,5 +37,11 @@ server.use("/api/goals", goalsRouter);
 server.get("/", (req, res) => {
   res.status(200).json({ Message: "Server is up and running!" });
 });
+
+// Generate CSRF
+server.get("/csrf", csrfProtection, (req, res) => {
+  res.send({ csrfToken: req.csrfToken() });
+});
+
 // Export Express server
 module.exports = server;
