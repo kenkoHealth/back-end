@@ -50,7 +50,10 @@ router.post("/login", async (req, res) => {
           current_user: { ...user, password: undefined },
         });
       } else {
-        res.status(401).json({ message: "Invalid credentials provided!" });
+        res.status(401).json({
+          message: "Invalid credentials provided",
+          status: res.statusCode,
+        });
       }
     })
     .catch((err) => {
