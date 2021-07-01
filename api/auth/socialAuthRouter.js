@@ -17,7 +17,7 @@ router.post("/facebook/token", async (req, res) => {
     // Log response from Facebook
     console.log(response);
     /* Need to figure out what to do next here...
-    We can either handle the accessToken in the server make request to fetch user data and generate an account based on that */
+    We can either handle the accessToken in the server, make request to fetch user data and generate an account based on that */
 
     /* OR we can pass the token back to the front-end where they can use it to make requests to fetch user data to persist to the client */
 
