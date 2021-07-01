@@ -30,8 +30,8 @@ server.use(morgan("tiny"));
 
 // Use Express Routers here....
 server.use("/api/users", UsersRouter);
-server.use("/api/goals", goalsRouter);
 server.use("/api/auth", AuthRouter);
+server.use("/api/goals", goalsRouter);
 server.use("/api/auth/social", socialAuthRouter);
 // End....
 
