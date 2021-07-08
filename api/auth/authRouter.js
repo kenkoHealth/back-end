@@ -27,7 +27,7 @@ router.post("/register", async (req, res) => {
     // Otherwise, error out
   } else
     res.status(400).json({
-      message: `Please provide both an email and a password when registering.`,
+      message: `Please provide both an email, username and a password when registering.`,
     });
 });
 
