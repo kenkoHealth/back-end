@@ -32,7 +32,8 @@ router.post("/facebook/token", async (req, res) => {
       first_name: userData.first_name,
       last_name: userData.last_name,
     };
-
+    /* NEED TO ADD A CHECK THAT CHECKS IF THE EMAIL ALREADY EXISTS IN THE DATABASE, IF SO...DO NOT ADD THE USER TO DB, JUST RETURN THE USER AS JSON */
+    /* CAN PROBABLY BUNDLE ALL THIS INTO A FUNCTION AS WE'LL NEED TO REPEAT THIS FUNCTIONALITY FOR OTHER SOCIAL MEDIA AUTH SERVICES */
     if (userToAdd.password) {
       const hash = bcrypt.hashSync(userToAdd.password, 12);
       userToAdd.password = hash;
