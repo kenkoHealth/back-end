@@ -34,20 +34,26 @@ router.post("/facebook/token", async (req, res) => {
     };
     /* NEED TO ADD A CHECK THAT CHECKS IF THE EMAIL ALREADY EXISTS IN THE DATABASE, IF SO...DO NOT ADD THE USER TO DB, JUST RETURN THE USER AS JSON */
     /* CAN PROBABLY BUNDLE ALL THIS INTO A FUNCTION AS WE'LL NEED TO REPEAT THIS FUNCTIONALITY FOR OTHER SOCIAL MEDIA AUTH SERVICES */
-    if (userToAdd.password) {
-      const hash = bcrypt.hashSync(userToAdd.password, 12);
-      userToAdd.password = hash;
-    }
+    const user = await Users.findBy(userToAdd.email);
+    // If we cannot find a user by the passed email in the database, one does not exist yet for this FB account, so create one
+    if (!user) {
+      if (userToAdd.password) {
+        const hash = bcrypt.hashSync(userToAdd.password, 12);
+        userToAdd.password = hash;
+      }
 
-    if (userToAdd.email && userToAdd.password && userToAdd.username) {
-      let addedUser = await Users.addUser(userToAdd);
-      res
-        .status(201)
-        .json({ user: addedUser, message: "User successfully created!" });
+      if (userToAdd.email && userToAdd.password && userToAdd.username) {
+        let addedUser = await Users.addUser(userToAdd);
+        res
+          .status(201)
+          .json({ user: addedUser, message: "User successfully created!" });
+      } else {
+        res.status(500).json({
+          message: "Please make sure all required fields are present!",
+        });
+      }
     } else {
-      res
-        .status(500)
-        .json({ message: "Please make sure all required fields are present!" });
+      res.status(200).json({ user: user, message: "User fetch successful!" });
     }
   } catch (error) {
     console.log(error);
