@@ -53,9 +53,7 @@ router.put("/:id", authmw, async (req, res) => {
       });
     }
     if (user) {
-      res.status(200).json({
-        Message: `User profile with ID of ${id} successfully updated.`,
-      });
+      res.status(200).json(user);
     } else {
       res.status(404).json({
         message: `No user found with the ID of ${id}.`,
